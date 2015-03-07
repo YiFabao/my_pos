@@ -87,8 +87,22 @@ gcc hello.o -o hello //链接 hello是可执行件
 	-E 只预处理
 	-g 包含调试信息
 	-o file 指定目标输出文件
-	-ldir 搜索头文件路径
+	-Idir 搜索头文件路径
+	-Ldir 扩大链接库搜索路径，gcc都会默认优先使用共享程序库　
+	-static：仅选用静态程序进行链接,如果一个目录中静态库和动态库同时存在，则仅选用静态库
+	-On 优化程序
+	-Wall 打开gcc能够提供的，常用的警告信息
 
+	-DMACRO选项
+	Exp:
+		#ifdef OS_LINUX
+			...代码段1
+		#else
+			...代码段2
+		#endif
+	-DOS_LINUX选项将会执行代码段1
+
+	
 3.生成和使用静态链库
 例：ar -rcs libstr.a string.o
 也可以使用命令-l 库名
@@ -100,5 +114,8 @@ gcc hello.o -o hello //链接 hello是可执行件
 	-L 是指定库函数的路径
 
 4.生成动态链库
+gcc -shared -Wl, \ 				#生成静态库
+	-soname,libstr.so.l \		#别名
+	-o libstr.so string.c		#实际的动态链库文件 
 
 
