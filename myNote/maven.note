@@ -1,0 +1,135 @@
+#maven
+2015/3/28
+=============
+1.什么是Maven?
+	Maven是跨平台的项目管理工具 :清理，编译，测试，生成报告，再到打包和部署
+	1.builds :
+	2.Documentation
+	3.Reporting
+	4.Dependencies
+	5.Release
+	6.Distribution
+2.Maven的安装
+	
+3.maven helloworld
+	关于如何用maven生成项目骨架?
+	  建立项目骨架，开一个Linux的console命令行窗口，输入以下命令：
+	  java 代码
+	  mvn archetype:generate \  
+	  -DgroupId=com.mycompany.webapp \  
+	  -DartifactId=myweb \  
+	  -Dversion=1.0-SANPSHOT \
+	  -DarchetypeArtifactId=maven-archetype-webapp  
+	   
+	  也可先不指定，直接运行mvn archetype:generate 后根据提示进行填写和选择,但这样有点慢
+
+	  简单解释一下：
+	  archetype  是一个内建插件，他的create任务将建立项目骨架
+	  archetypeArtifactId   项目骨架的类型
+
+	  可用项目骨架有：
+	  * maven-archetype-archetype
+	  * maven-archetype-j2ee-simple
+	  * maven-archetype-mojo
+	  * maven-archetype-portlet
+	  * maven-archetype-profiles (currently under development)
+	  * maven-archetype-quickstart
+      * maven-archetype-simple (currently under development)
+	  * maven-archetype-site
+	  * maven-archetype-site-simple, and
+	  * maven-archetype-webapp
+	  groupId  项目的java包结构，可修改
+	  artifactId  项目的名称，生成的项目目录也是这个名字，可修改
+
+	第一步：命令行生成项目骨架 mvn archetype:generate
+				src
+				|---src
+					|---main
+					|---test
+				|---target
+				|---pom.xml
+
+	第二步：在main中写代码,在test中写测试代码,代码中依赖的jar包，在pom中配置
+		<dependency>
+			<groupId></groupId>    //包名:公司名+项目名,例com.yifabao.im
+			<artifactId></artifactId> //模块名:如account
+			<version></version> 	//版本　
+			<scope></scope>	//依赖范围	
+		</dependency>
+	第三步：编绎 mvn compile
+			测试 mvn test
+			打包 mvn clean package
+			将jar装载到本地maven仓库，供其他项目调用
+			
+4.maven的相关概念
+	坐标：
+		groupdId: 包
+		artifactId: 包下的模块
+		version:项目的当前版本
+		packaging:定义该项目的打包方式，默认jar,还可以是war,jar,ear
+	maven为什么要坐标：唯一标识一个jar	
+
+	依赖：
+		声明项目所依赖的jar包,机器自动先从本地maven仓库找，找不到再从网上maven仓库找
+
+	依赖管理:
+		*如何依赖配置
+		*依赖的范围
+		*传递性依赖和可选依赖
+	----------------------------------------------------------------------------------------------------------------------
+	依赖范围	主代码classpath有效		测试代码classpath有效		打包，运行时classpath有效	例子
+	----------------------------------------------------------------------------------------------------------------------
+	compile(默认) 	Y					Y							Y							log4j
+	test			-					Y							-							junit
+	provided		Y					Y							-							servlet-api
+	runtime			-					-							Y							JDBC Driver Implementation
+	----------------------------------------------------------------------------------------------------------------------
+	
+	仓库管理:
+		maven仓库：用来统一存储所有maven共享构建的位置就是仓库maven仓库布局
+		maven仓库布局:
+			根据maven坐标定义每个构建在仓库中唯一存储路径大致为:groupId/artifactId/version/artifactId-version.packaging
+		仓库的分类：
+			本地仓库：~/.m2/repository/
+			远程仓库
+			中央仓库(默认)
+			私服:架设在局域网的仓库
+			镜像
+
+	生命周期管理：
+		maven生命周期即项目的构建步骤
+		清理，初始化，编译，打包，测试，部署等几乎所有构建步骤
+		1)clean生命周期：pre-clean clean post-clean
+		2)site生命周期：pre-site site post-site site-deploy
+		3)默认生命周期： compile test package install deploy(还有很多)
+		三套生命周期是相互独立的
+	
+	插件管理:
+		每个maven命令都是一个一个的插件组成的，插件就是一个项目和jar
+
+	Maven的依赖关系:
+	依赖冲突：jar包版本不同，并且兼容性不好，想同时引进两个版本的jar包是不行的
+	传递性依赖原则：路径最近者优先，路径相同，第一声明者优先
+	
+	继承与聚合:
+		使用场景,A调用B,A,B为父子工程,但他们都得需要调用junit,其实子工程可以继承父程的pom.xml
+		这样子工程就不必再配置依赖junit.jar	
+		继承实现的步骤:
+			第一步:　新建一个父工程，目的是消除子工程的配置文件中重复的内容，所以无需代码类
+			第二步:	 子工程统一用junit版本4.9
+			第三步:	 加入Hello,helloFriend依赖的dependency
+			第四步:	 最后在各个子工程中引入父工程即可<parent>，放在<dependencies>上面，同时在所有子项目中删除在父项目中已经置配的jar 的依赖
+			<parent>
+				<groupId>com.yifabao.im</groupId>
+				<artifactId>Parent</artifactId>
+				<relativePath>../Parent/pom.xml</relativePath>
+				<version>0.0.1-SNAPSHOT</version>
+			</parent>
+		聚合：即在父工程中配置子项目
+			<modules>
+				<module>../Hello</module>
+				<module>../HelloFriend</module>
+			</modules>
+		然后只需在父项目中　输入一个指令，就会对整个子项目进行统一的执行
+
+

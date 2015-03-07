@@ -1,0 +1,13 @@
+##linux笔记
+1.linux下载命令: 
+	wget http://www.linuxsense.org/xxxx/xxxx.tar.gz
+	wget -c 加上-c可支持断点续传,还有很多功能参数，google　it
+
+2.更改文件或目录的属主和属组
+	例1：把文件shiyan.c的所有者改为wang。
+	chown yifabao test.c
+	例2：把目录/his及其下的所有文件和子目录的属主改成wang，属组改成users。
+	$ chown - R yifabao.yifabao /Apache-8.0.xxx
+	
+
+

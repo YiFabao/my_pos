@@ -1,0 +1,61 @@
+===============================================
+2015/3/27
+1.函数的定义:先声明在定义，或直接定义在main 函数前
+2.数字类型
+	atoi(const char*) //将字符串转换为整型数的一个函数
+	atol(const char*) //将字符串转换为长整型
+3.软件工程中把程序分为三个文件：
+	接口文件:数据结构及声明
+	接口声明的函数的实现程序文件;
+	客户程序;
+4.MakeFile 文件编写
+	##add.c
+	--------------------
+	#include<stdio.h>
+	#include "test.h"
+
+	int add(int a,int b){
+		return a+b;	
+	}
+
+	int main(int argc,char* argv[]){
+		printf("2+3=%d\n",add(2,3));
+		printf("2-3=%d\n",sub(2,3));
+	}
+
+	##sub.c
+	----------------------
+	#include "test.h"
+	int sub(int a,int b){
+		return a-b;	
+	}
+
+	##test.h
+	----------------------
+	#ifndef _TEST_H
+	#define _TEST_H
+	
+	int add(int a,int b);
+	int sub(int a,int b);
+	#endif
+
+	##Makefile
+	----------------------
+	test:add.o sub.o
+		gcc -o test add.o sub.o
+	add.o:add.c test.h
+		gcc -c add.c
+	sub.o:sub.c test.h
+		gcc -c sub.c
+	clean:
+		rm -rf test
+		rm -rf *.o
+		
+5.结构体 
+	结构体是集合类型 ,例：struct point {float x;float y;}; 
+	struct point 就是一个数据类型用时像int一样用
+6.指针是多种数据结构和算法的基础
+7.在C语言中所有的参数采用按值传递，也就是说，如果函数向参数变量赋一个新的值，该赋值作用只局限于函数内部
+
+
+

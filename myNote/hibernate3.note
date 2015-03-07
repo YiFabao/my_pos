@@ -1,0 +1,19 @@
+#Hibernate 笔记
+2015/3/28 
+====================
+一.hibernate 环境的搭建
+	1.从网上下载hibernate项目,从项目中复制需要的jar包到项目中
+	2.配置文件
+	3.mysql的驱动jar包
+	可以通过maven下载相应的jar包
+
+二.在数据库中创建一个数据库db_yifabao
+	创建一张表t_user
+	create table t_user(
+		id int primary key auto_increment,
+		name varchar(20)
+	);
+
+
+
+
