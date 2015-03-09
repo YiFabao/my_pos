@@ -1,0 +1,38 @@
+<?xml version = "1.0"?>
+<project name = "structured" default = "execute">
+
+	<description>Compiles and runs a simpile program</description>
+
+	<target name = "init">
+		<mkdir dir = "build/classes" />
+		<mkdir dir = "dist" />
+	</target>
+
+	<target name="compile" depends="init" 
+		description = "compiles the source code">
+		<javac srcdir="src" destdir = "build/classes"/>	
+	</target>
+
+	<target name = "archive" depends = "compile"
+		description = "Create the JAR file">
+		<jar destfile = "dist/project.jar" 
+			 basedir = "build/classes" />	
+	</target>
+
+	<target name = "clean" depends="init"
+		description = "Remove the temporary directories used">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="execute" depends="compile" 
+		description = "Runs the program">
+		<java
+			classname = "com.yifabao.welcome.Main"
+			classpath = "build/classes">
+			<arg value = "a" />
+			<arg value = "b" />
+			<arg value = "c" />
+		</java>
+	</target>
+</project>

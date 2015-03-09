@@ -1,0 +1,14 @@
+1. ivy的安装,在安装好ant后，下载ivy开发包,解压后，将里面的ivy.jar拷到ant安装目录的lib目录下即可，测试可进入ivy/src/example/hello-ivy/目录运行ant
+ivy 下载的包默认放在 ${user.home}/cache
+2. ant 运行需要一个 build.xml (project,target,task);
+
+3.ant 可以带参数指定配置文件
+	例：ant -buildfile build.xml compile
+
+4.查看ant 中的对每个target 的descroption 
+	ant -projecthelp
+
+
+
+
+

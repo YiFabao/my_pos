@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+	<info organisation="org.hibernate" module="hello-ivy" />
+	<dependencies>
+		<dependency org = "org.hibernate" name="hibernate-core" rev="3.6.10.Final"/> 
+	</dependencies>
+</ivy>

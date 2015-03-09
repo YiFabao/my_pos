@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
 	    <!-- Database connection settings -->
@@ -6,6 +7,10 @@
 	    <property name="connection.url">jdbc:mysql://localhost:3306/db_yifabao</property>
 	    <property name="connection.username">root</property>
 	  	<property name="connection.password">660419</property>
+	
+		<!--显示生成的SQL语句-->
+	  	<property name="show_sql">true</property>
+		
 		
 		<!--配置数据库连接池-->
 		<property name="hibernate.c3p0.max_size">20</property>
@@ -17,12 +22,12 @@
 		<property name="hibernate.c3p0.validate">true</property>
 
 		<!-- 指定数据库方言-->
-		<property name="dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		<!-- 根据需要自动创建数据库表-->
 		<property name="hbm2ddl.auto">update</property>
 
 		<!-- 映射文件-->
-		<mapping resource="Product.hbm.xml"/>
+		<mapping resource="com/yifabao/hibernate/Product.hbm.xml"/>
 
 	</session-factory>
 </hibernate-configuration>

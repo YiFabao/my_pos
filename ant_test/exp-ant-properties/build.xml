@@ -1,0 +1,16 @@
+<?xml version= "1.0"?>
+<project name = "copy" default="init" xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<fileset id="source.fileset" dir="src" includes="**/*.java" />	
+
+	<property name = "host" value = "localhost" />
+
+	<echo>host = ${host}</echo>
+
+	<target name ="init">
+		<ivy:retrive/>
+		<ivy:report todir="build"/>
+	</target>
+
+
+</project>
