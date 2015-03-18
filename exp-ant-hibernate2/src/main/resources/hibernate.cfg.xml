@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+	    <!-- Database connection settings -->
+	    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+	    <property name="connection.url">jdbc:mysql://localhost:3306/db_yifabao</property>
+	    <property name="connection.username">root</property>
+            <property name="connection.password">962297fabaoyi</property>
+            <property name="connection.useUnicode">true</property>
+            <property name="connection.characterEncoding">UTF-8</property>
+            
+            <!--配置数据库连接池-->
+            <property name="hibernate.c3p0.max_size">20</property>
+            <property name="hibernate.c3p0.min_size">1</property>
+            <property name="hibernate.c3p0.timeout">5000</property>
+            <property name="hibernate.c3p0.max_statements">100</property>
+            <property name="hibernate.c3p0.idle_test_period">3000</property>
+            <property name="hibernate.c3p0.acquire_increment">2</property>
+            <property name="hibernate.c3p0.validate">true</property>
+            <property name="javax.persistence.validation.mode">none</property>
+
+            <!-- 指定数据库方言-->
+            <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+            <!-- 根据需要自动创建数据库表-->
+            <property name="hbm2ddl.auto">update</property>
+
+            <!-- 映射文件-->
+            <mapping resource="com/yifabao/app/User.hbm.xml"/>
+
+	</session-factory>
+</hibernate-configuration>
+
+
+

@@ -14,6 +14,26 @@
 		name varchar(20)
 	);
 
+三.有时Hibernate保存中文时会出现乱码。
+可以在配置文件中，配置连接的字符编码。
+如下：
+<property name="connection.useUnicode">true</property> 
+<property name="connection.characterEncoding">UTF-8</property>
+
+四. Unable to get the default Bean Validation factoryat org.hibernate.cfg.beanvalidation.BeanValidationActivator.applyDDL(BeanValidat
+    报这个错的原因:
+    可怜的我居然hibernate居然不报错了。兴奋啊,javax.persistence.validation.mode默认情况下是auto的，就是说如果不设置的话它是会自动去你的classpath下面找一个bean-validation**包，但是找不到，所以beanvalitionFactory错误。
+    因此添加配置:
+    <property name="javax.persistence.validation.mode">none</property>  
 
 
-
+普通属性的映射：
+    1.数据库中的基本类型，如字符串，日期，数字
+    2.property 中
+        name:对象中的属性名，必须有
+        type:属性类型，如果不写hibernate 会自动检测
+        column:对应表中的列名，如果没有默认为属性名
+        length:不是所有的属性都有长度，varchar 有，但int 没有
+        not-null:非空约束，默认为false，可以为空
+        <property name = "" type="string" column="" length="" not-null=""/>
+    

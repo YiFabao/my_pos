@@ -1,0 +1,2 @@
+mysql 修改root密码:
+mysqladmin -uroot -p原密码 password

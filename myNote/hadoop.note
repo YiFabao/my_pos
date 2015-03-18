@@ -1,0 +1,196 @@
+使用hadoop 一定要确认iptables,selinux等防墙已经关闭
+
+配置免密码主机互访
+==============================
+准备工作 配置ssh
+ssh-keygen -t rsa
+
+master ===>   slave1
+不需要任何密码
+
+1.在master 下 ssh-keygen -t rsa 生成私钥和公钥
+2.将master 下的公钥拷贝到slave1 的.ssh目录下改名为authorized_keys
+scp ./id_rsa.pub yifabao@192.168.1.143:/home/yifabao/.ssh/authroized_keys
+
+一定要是authorized_keys 不能是其他的名字
+
+下载hadoop
+wget http://  .
+
+将下载的hadoop 复制到其他节点 
+
+进入 conf/ 
+1.改hadoop-env.sh 设置JAVA_HOME 	的路径
+
+2.设置core-sites.xml
+	<configuration>
+		<property>
+			<name>fs.default.name</name>
+			<value>hdfs://debian_master:9000</value>
+		</property>
+
+		<property>
+			<name>hadoop.tmp.dir</name>
+			<value>/home/yifabao/Downloads/hadoop-1.2.1/tmp</value>
+		</property>
+	
+	</configuration>
+
+
+fs.default.name ==>hdfs://debian_master:9000
+	debian_master 是主机名也可以是ip，后面需要配置hosts
+hadoop.tmp.dir===>/home/yifabao/Downloads/hadoop-1.2.1/tmp  临时目录
+不设置，会默认为系统的tmp 重启后，temp下的文件都会消失
+
+3.再设置文件hdfs-site.xml
+<configuration>
+	<property>
+		<name>dfs.replication</name>
+		<value>4</value>
+	</property>
+</configuration>
+
+指定服务器因子，4代表有4个数据节点
+
+
+4.改mapred-site.xml
+<configuration>
+	<property>
+		<name>mapred.job.tracker</name>
+		<value>debian_master:9001</value>
+	</property>
+</configuration>
+
+指定job.tracker监听地址和端口
+
+5.配置masters slaves
+	指出哪个是充当master的
+
+6.配置hosts文件
+	dns映射
+	192.168.1.142 debian_master
+	192.168.1.143 debian_slave1
+	192.168.1.144 debian_slave2
+	192.168.1.145 debian_slave3
+	192.168.1.146 debian_slave4
+
+7.关闭防火墙
+
+8.格式化名称节点
+	cd bin
+	./hadoop namenode -format
+
+9.启动 start-all.sh
+10.关闭 stop-all.sh
+
+===========================================
+namenode :管理文件系统的命名空间
+	记录每个文件数据块在各个datanode 上的位置和副本信息
+
+	协调客户端对文件的访问
+
+	记录命名空间内的改动或空间本身属性的改动
+
+datanode 负责所在物理节点的存储管理
+	一次写入，多次读取(不修改)
+文件由数据块组成,典型的块大小是46MB
+
+===============================
+读取数据的流程
+
+客户端要访问HDFS中的一个文件
+
+首先从namenode 获取组成的这个文件的数据块位置列表
+
+根据列表知道存储数据块的datanode
+
+访问datanode 获取数据
+
+====================================
+hdfs的可靠性
+
+冗余副本策略
+	可以在hdfs-site.xml中设置
+	所有数据块都有副本
+	Datanode 启动时,遍历本地文件系统，产生一份hdfs数据块和本地文件的对应关系列表(blockreport)汇报给namenode
+
+========================================
+机架策略
+集群一般放在不同中机架上,机架间带宽要比机架内带宽要小
+机架感知
+
+心跳机制
+=======
+侦测slaves是否死掉
+
+
+安全模式:安全模式阶段不会产生数据写
+在此阶段Namenode 收集各个datanode 报告，当数据块达到最小副本数以上时，会被认为是"安全"的
+在一定比例的数据块被确定为"安全"后，再过若干时间,安全模式结束
+当检测到副本数不足数据块时，该块会被复制直到达到最小副本数
+
+进入安全模式
+hadoop dfsadmin -safemode enter
+
+离开安全模式
+hoadoop dfsadmin -safemode leave
+
+
+校验和
+在文件创建时，每个数据块都产生校验和
+校验和保存在.meta文件内
+
+客户端获取数据时可以检查校验和是否相同，从而发现数据块是否损坏
+如果正在读取的数据块损坏，则可以继续读取其它副本
+
+回收站
+删除文件时，其实是放入回收站/trash
+回收站里的文件可以快速恢复
+可以设置一个时间阈值，当回收站里的文件存放时间超过这个阈值时，会删除这个文件
+
+元数据保护，多个副本
+
+快照:支持存储某个时间点的映像,需要时可以使数据重返这个时间点的状态
+
+Hadoop 目前还不支持快照，已经列入开发计划，传说在Hadoop 2.x版本里讲将得此功能
+
+============================================================
+hdfs 文件操作
+1.命令行方式
+2.API方式
+
+hadoop 没有当前目录的概念，也没有cd命令
+
+上传文件到hdfs
+
+将本地文件拷到hdfs的目录里面
+
+数据写在哪了?blk_..的二进制文件
+
+将HDFS的文件复制到本地
+hadoop fs -get ./in/*   /home/yifabao
+
+
+删除
+hadoop fs -rmr ./in/xxx
+
+
+相看hdfs基本统计信息
+
+hadoop dfsadmin -report
+
+
+怎样添加节点
+在新节点安装好hadoop
+把namenode 的相关配置文件复制到该节点
+修改masters和slaves 文件,增加该节点
+
+设置ssh免密码进出该节点
+
+单独启动该节点上的datanode和tasktracker
+hadoop-daemon.sh start datanode/tasktracker
+
+运行start-balancer.sh进行数据负载均衡
+使得现在的数据往刚添加的节点下匀一下
+
+是否要重启集群?
