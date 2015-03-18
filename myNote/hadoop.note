@@ -194,3 +194,5 @@ hadoop-daemon.sh start datanode/tasktracker
 使得现在的数据往刚添加的节点下匀一下
 
 是否要重启集群?
+
+
