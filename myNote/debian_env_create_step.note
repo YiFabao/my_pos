@@ -1,0 +1,5 @@
+１.安装好debian后
+2.进入/etc/apt 目录
+3.将sources.list 中改为
+    deb http://mirrors.163.com/debian/ stable main
+    deb-src http://mirrors.163.com/debian/ stable main
