@@ -158,41 +158,53 @@ Hadoop 目前还不支持快照，已经列入开发计划，传说在Hadoop 2.x
 hdfs 文件操作
 1.命令行方式
 2.API方式
+============================================================
 
 hadoop 没有当前目录的概念，也没有cd命令
+1.列出文件列表
+	hadoop fs -ls
 
-上传文件到hdfs
+2.上传文件到hdfs
+hadoop fs -put localdir fsdir
 
-将本地文件拷到hdfs的目录里面
-
-数据写在哪了?blk_..的二进制文件
-
-将HDFS的文件复制到本地
+3.将HDFS的文件复制到本地
 hadoop fs -get ./in/*   /home/yifabao
 
+4.删除hdfs下的文档
+hadoop fs -rmr 文件
 
-删除
-hadoop fs -rmr ./in/xxx
-
-
-相看hdfs基本统计信息
-
+5.查看HDFS基本统计信息
 hadoop dfsadmin -report
 
 
+数据写在哪了?blk_..的二进制文件
+
+
+============================================================
 怎样添加节点
-在新节点安装好hadoop
-把namenode 的相关配置文件复制到该节点
-修改masters和slaves 文件,增加该节点
+1.在新节点安装好hadoop
+2.把namenode 的相关配置文件复制到该节点
+3.修改masters和slaves 文件,增加该节点
 
-设置ssh免密码进出该节点
+4.设置ssh免密码进出该节点
 
-单独启动该节点上的datanode和tasktracker
-hadoop-daemon.sh start datanode/tasktracker
+5.单独启动该节点上的datanode和tasktracker
+6.hadoop-daemon.sh start datanode/tasktracker
 
-运行start-balancer.sh进行数据负载均衡
-使得现在的数据往刚添加的节点下匀一下
+7.运行start-balancer.sh进行数据负载均衡
+8.使得现在的数据往刚添加的节点下匀一下
 
-是否要重启集群?
+是否要重启集群?不需要
+
+============================================================
+运行编绎出来的jar包
+	hadoop jar HDFSJavaAPI.jar HDFSJavaAPIDemo
+	
+Hadoop会出现一个warning $HADOOP_HOME is deprecated
+	原因是说新的HADOOP版本使用HADOOP_INSTALL 作为环境变量
+还可以这样解决 /etc/profile 中　export HADOOP_HOME_WARN_SUPPRESS=1	
+
+
+
 
 

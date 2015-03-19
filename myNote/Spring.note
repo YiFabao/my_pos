@@ -224,3 +224,109 @@ expression = "expression (* com.yifabao.service..*.*(..))"
 
 
 
+========================================================================
+spring注解方式管理事务与传播行为详解
+
+
+
+
+1.默认情况下，运行期(runtime exception)异常 事务回滚,非运行期异常(checked exception)事务不回滚,
+	但自己在本机上默认情况下，无论是运行期异常还是检查异常，都回滚了
+自已可以指定其是否回滚
+
+2.默认事务传播为:required
+
+事务传播特性的解释:
+1.required :业务方法需要在一个事务中运行，如果方法运行时，已经处在一个事务中，那么加入到该事务，否则为自己创建一个新的事务.
+2.not_supported :声明方法不需要事务，如果方法没有关联到一个事务，容器不会为它开启事务。如果方法在一个事务中被调用，该事务会被挂起，在方法调用结束后，原先的事务便会恢复执行.
+3.requiresnew :属性表明不管是否存在事务，业务方法总会为自己发起一个新的事务。如果方法已经运行在一个事务中，则 原有的事务会挂起，新的事务被创建，直到方法执行结束，新事务才算结束，原先的事务才会恢复执行.
+4.mandatory:该属性指定业务方法只能在一个已经存在的事务中执行，业务方法不能发起自己的事务。如果业务方法在没有事务的不幸下调用，容器就会抛出例外。
+
+5.supports:这一事务属性表明，如果业务方法在某个事务范围内被调用，则 方法成为该事务的一部分。如果业务方法在事务范围外被调用，则 方法在没有事务的环境下执行。
+
+6.nested:如果一个活动的事务存在，则运行在一个嵌套的事务中。如果没有活动事务，则按requred 属性执行。它使用了一个单独的事务，这个事务拥有多个回滚的保存点。内部事务的回滚不会对外部事务造成影响。它只对DataSourceTransactionManager事务管理器起效.
+
+
+
+================================
+此外还可以设置只读事务 readonly
+设置超时时间:timeout
+设置事务隔离级别，依赖低层数据库：
+	数据库系统提供了四种事务隔离级别供用户选择。不同的隔离级别采用不同的锁类型来实现，在四种隔离级别中，Serializable的隔离级别最高，Read Uncommited的隔离级别最低。大多数据库默认的隔离级别为Read commited,如sqlserver,当然也有少部分数据库默认的隔离级别为repeatable read,如mysql;
+
+	Read Uncommited:读未提交数据(会出现脏读,不可重复读和幻读)
+	Read Commited:读已提交数据(会出现不可重复读和幻读)
+	Repeatable Read:可重复读(会出现幻读)
+	Serializable:串行化
+
+
+脏读:两个并发事务中,一个事务读取到另一事务未提交的更新数据.
+
+不可重复读：在同一个事务中，多次读取同一数据返回的结果有所不同。换句话说就是，后续读取可以读到另一事务已提交的更新数据。相反，“可重复读”在同一事务中多次读取数据时，能够保证所读数据一样，也就是，后续读取到另一事务已提交的更新数据。
+
+幻读：一个事务读取到另一事务已提交的insert数据
+
+
+危害最大的是:脏读
+
+
+=============================================================================
+Spring+hibernate+struts1.3整合开发:
+
+先整合spring+hibernate
+这是一个web项目
+
+注意自己用的hibernate 的版本
+如果用的是hibernate4,则 org.springframework.orm.hibernate4.LocalSessionFactoryBean
+在类目录下添加log4j.properties否则报警告
+
+===========================================================================
+spring容器可以通过listener来进行初始化
+
+把action交给spring管理后,我们可以使用依赖注入在action中注入业务层的bean,确保action的path属性值与bean的名称相同.
+
+
+org.springframework.web.struts.DelegatingRequestProcessor 处理过程：
+
+用户请求 /person/list.do ===> web.xml 下的ActionServlet ===>DelegatingRequestProcessor请求处理器
+===>Spring容器(Action交给了容器客理)<bean name="/person/list" class="com.yifabao.web.action.PersonAction"/>
+获取action对象，处理用户的请求
+
+
+<action path="/person/list" type="com.yifabao.web.action.PersonAction" validate = "false">
+		<forward name="list" path="WEB-INF/page/personlist.jsp"/>
+</action>
+
+当把Action交给spring管理后，type属性就不用配了，因为spring请求处理器，根据用户的请求路径会到spring容器去寻找跟/person/list 相同的bean ,如果找到就会用这个bean来处理用户的请求.
+
+type也可以配，当spring请求处理在spring容器中找不到action bean时才会让struts根据type创建一个action;
+
+
+spring软件开发包下载网址repo.spring.io 查询spring-framework
+
+maven中央仓库:
+search.maven.org
+http://mavenrepository.com
+
+org.springframework.web.struts.DelegatingRequestProcessor这个类需要下载
+spring-struts这个模块，在search.maven.org上能搜到
+
+index.jsp用<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+一直报错，发现web.xml中启动struts的servlet没有设置	<load-on-startup>0</load-on-startup>
+了一个<load-on-startup>0</load-on-startup>
+这样开始是没有加载这个类，就没有初始化struts-config.xml，所以找不到
+actionmappings or actionformbeans collection
+
+
+使用spring解决hibernate因session关闭导致延迟加载异常的问题
+<filter>
+	<filter-name>OpenSessionInViewFilter</filter-name>
+	<filter-class>org.springframework.orm.hibernate4.support.OpenSessionViewFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>OpenSessionInViewFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+session的打开是在请求到来时打开，请求
+从中由 Spring 来控制 Hibernate 的 Session 在请求来的时候开启，走的时候关闭，保证了我们访问数据对象时的稳定性。

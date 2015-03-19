@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 1. ivy的安装,在安装好ant后，下载ivy开发包,解压后，将里面的ivy.jar拷到ant安装目录的lib目录下即可，测试可进入ivy/src/example/hello-ivy/目录运行ant
 ivy 下载的包默认放在 ${user.home}/cache
 2. ant 运行需要一个 build.xml (project,target,task);
@@ -82,7 +81,6 @@ target 标签元素
 
 *.jsp　只匹配当前文件夹下的.jsp文件，但不包含子文件目录下的.jsp文件
 **/
->>>>>>> 83f665889909cde92176f4ca3b715957649608b0
 
 
 
@@ -92,7 +90,46 @@ Unit tests 单元测试,测试某段代码
 System tests 测试整个系统
 Acceptance tests 测试整个系统或应用程序是否满足客户的需求，验收测试
 Regression testing 回归测试，测试某个修改是否让其他的程序不正常
-
 Junit 是单元测试框架
+
+
+
+========================================================================
+用ant 开发web项目
+1.开发一个web项目
+2.构建一个war包
+3.布署
+4.后期布署活动
+5.用HttpUnit 测试web应用
+6.总结
+
+web项目打包比简单地打一个jar包更加复杂.而且测试前需要先布署到web服务器中.
+
+
+1.什么是web 应用?
+	一个java web应用就是一个网站打成一个jar文件.这个jar文件，包含libraires,code,和resources--页面，图片以及其他内容
+
+	resources 提供了网站的静态内容部分
+	java classes,libraries,和jsp/jspx 组成了应用的动态部分.
+
+web中各个应用都不是相互独立的,一个servlet容器把握着他们;
+
+这个servlet 容器可能嵌入在像Jetty,或一个成熟的J2EE就用服务器像JBoss;
+这些servlet容器需要知道如何执行这个web应用;
+这需要一个标准的打包机制：WAR file,就像一个jar file并加上一个标准的布局.
+
+WEB-INF 和 META-INF 目录
+
+WEB-INF需包含一个web.xml 用来为服务器描述这个应用
+
+java code 放在WEB-INF/classes 目录下
+libraries 放在WEB-INF/lib 目录下
+
+
+构建并布署war 文件是web应用构建过程的核心.
+
+打包主要就是一个将所有的材料资源放在合适位置这样事情,保证web.xml配置是正确的.
+
+布署和测试在成功打包后圆满结束.
 
 
