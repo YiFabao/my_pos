@@ -8,4 +8,4 @@
 ***/
 #define PORT 9
 
-void generatePacket(char *, char *);
+void generatePacket(char *, uint8_t *);
