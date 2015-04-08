@@ -6,10 +6,10 @@ void printB(int a)
 {
 	int size = sizeof(int)*8;	
 	int i;
-	for(i=size;i>=0;i--)
+	for(i=size-1;i>=0;i--)
 	{
 		int flag = a&(1<<i);
-		printf("%c ",flag>0?'1':'0');
+		printf("%c ",flag==0?'0':'1');
 	}
 }
 int main(int artc,char* argv[]){

@@ -1,6 +1,2 @@
-#include<stdio.h>
+var foo = "method("+argument1+","+argument2+")";
 
-int main(int argc,char* argv[]){
-	printf("Hello world!\n");
-	return 0;
-}
