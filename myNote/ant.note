@@ -1,0 +1,72 @@
+build.xml文件配置
+
+项目骨架
+
+ant task 标签元素：
+    1.创建文件夹    <mkdir dir = "build/classes"/>
+    2.删除文件夹    <delete dir = "build/classes"/>
+    3.编译          <javac srcdir= "src" destdir="build/classes"/>
+    4.打包          <jar destfile="dist/project.jar" basedir = "build/classes"/>
+    5.显示语句      <echo>hello world!</echo>
+    6.执行         
+         <java classname = "com.yifabao.app.HelloWorld"
+               classpath = "build/classes">
+               <arg value="a"/>
+               <arg value="b"/>
+               <arg file="."/>
+         </java>
+    
+
+target 标签元素
+<target name="compile" depends="init" description="-->编译">
+    ..
+</target>
+
+
+数据类型
+<fileset id="source.fileset" dir="src" includes="**/*.jaava" />
+
+使用
+<copy todir="backupa">
+    <fileset refid="source.fileset"/>
+</copy>
+
+
+<path location="lib/junit.jar"/>
+
+<path path="build/classes;lib/junit.jar"/>   冒号或分号都行
+
+<path>
+    <fileset dir = "lib">
+        <include name = "*.jar"/>
+    </fileset>
+</path>
+
+
+<path id="junit.path" location="lib/junit.jar"/>
+
+<path refid = "junit.path"/>
+
+可以用src标签来将不同路径下的java文件编译到一个单独的文件中
+<javac destdir = "build/classes">
+    <src path="src"/>
+    <src path="test"/>
+</javac>
+
+
+模式
+<copy todir = "newweb">
+    <fileset dir="web" includes="**/*.jsp"/>
+</copy>
+等价于
+<copy todir = "newweb">
+    <fileset dir="web">
+        <include name = "**/*.jsp"/>
+    </fileset>
+</copy>
+
+
+*.jsp　只匹配当前文件夹下的.jsp文件，但不包含子文件目录下的.jsp文件
+**/
+
+
