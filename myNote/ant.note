@@ -70,3 +70,14 @@ target 标签元素
 **/
 
 
+
+测试
+=================================
+Unit tests 单元测试,测试某段代码
+System tests 测试整个系统
+Acceptance tests 测试整个系统或应用程序是否满足客户的需求，验收测试
+Regression testing 回归测试，测试某个修改是否让其他的程序不正常
+
+Junit 是单元测试框架
+
+
