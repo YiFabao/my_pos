@@ -1,0 +1,13 @@
+mysql 修改root密码:
+mysqladmin -uroot -p原密码 password
+
+表创建完后忘记设置主键
+alter talbe person_tab add primary key(id);
+
+表创建后忘记设置主键自动增长
+alter table change id id int auto_increment;
+
+mysql 数据库中文乱码的解决?)
+1.先查看一下mysql的配置，是否都是utf-8
+mysql> show variables like 'character_set_%'; //都为utf8则没事
+mysql> show variables like 'collation_%';//都为utf8_general_ci,则没事

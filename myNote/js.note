@@ -1,0 +1,15 @@
+========================================JavaScript==========================================
+
+1.去掉html标签的js
+
+<script>
+ function delHtmlTag(str){
+	   return str.replace(/<[^>]+>/g,"");//去掉所有的html标记
+ }
+var str = "<span style='display:none;'>This is test</span><img src=''>ss</img><strong></strong><br/>";
+str = delHtmlTag(str);
+alert(str);
+</script>
+
+
+

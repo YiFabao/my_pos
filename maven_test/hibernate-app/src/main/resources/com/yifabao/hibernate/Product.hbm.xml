@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-	<class name="com.yifabao.hibernate.Product" table="product_table">
+	<class name="com.yifabao.hibernate.Product" >
 		<id name="id">
 			<generator class="assigned"></generator>
 		</id>

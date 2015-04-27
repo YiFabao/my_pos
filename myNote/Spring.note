@@ -1,0 +1,332 @@
+什么是Spring?
+简单说Spring 是一个轻量级的IoC和AOP容器框架,通过其核心的依赖注入机制，以及AOP的声明式事务管理，与持久层框架整合，以及与其他的MVC框架整合，为企业应用提供一个轻量级的解决方案。
+
+SSH整合开发就是Struts Spring Hibernate 来进行开发.SSH整合开发是一个非常好的企业级开发方案。使用Spring的IOC容器来负责创建和管理组件，其中这些组件包括前端的业务控制器，中间的业务逻辑组件，以及底层的DAO组件。这些组件都将处于Spring的IoC容器的管理之下，从而大大降低各组件之间的耦合度.
+
+Spring 的优势：
+	1.轻量级
+	2.反向控制,又称为依赖注入和IoC.使用方向控制，对象被动接收依赖类而不是自已去创建或者查找其所依赖的对象.
+	3.面向切面:又称为AOP,使用面向切面编程，可以将业务逻辑从系统服务中抽取出来，实现内聚开发。应用对象只实现业务逻辑，而不会去负责其他的系统级关注点
+	4.容器:Spring 中包含并且可以管理应用对象的配置和生命周期，配置Bean如何被创建或者如何被关联。
+	5.框架：可以将简单的组件配置组合成复杂的应用
+	6.免费开源
+	7.众多社区支持
+
+Spring由以下几个模块组成:
+
+	1.核心容器和支持工具:核心容器主要组成部就是BeanFactory类，这个类提供了Spring的核心功能,它采用工厂模式实现反转控制，从而把应用程序的配置和依赖性与实际应用程序代码分离
+	2.Application Context模块
+		在这个模块中提供了对Java企业级的服务的支持，例如访问JNDI,集成EJB,电子邮件服务等.
+	3.AOP模块
+		在Spring 的AOP模块中，直接集成了面向切面编程的功能,这个模块是Spring应用系统开发切面的基础，Spring AOP可以为基于Spring 的应用系统提供事务管理服务，通过使用AOP,不用依赖EJB,也可以在应用系统中使用声时式的事务管理策略.
+		
+	4.JDBC和DAO模块
+		JDBC 和 DAO模块提供了数据库操作中的模板代码，例如取得数据库连接、处理结果集,关闭数据库连接等,Spring通过提供这些模板代码，简化了数据库操作的代码，同时释放数据库资源的操作是由Spring提供的,所以就可以避免数据库资源释放失败引起的性能问题，另外在Spring的JDBC和DAO模块中，提供了数据库异常层，用来管理异常处理和不同数据库供应商抛出的错误信息，这就简化了数据库操作的错误处理，并且极大地减少了异常处理的工作量.
+	5.ORM映射模块
+		在Spring中并不是提供对ORM映射实现,而是提供了对其他ORM工具的支持,可以在Spring 中集成现有的ORM映射工具，在Spring 中支持的ORM工具包括JDO,Hibernate,ibatis等，Spring的事务管理都提供对这些ORM工具的支持.
+	
+	6.WEB模块
+		Web模块是建立在Application Context模块的基础上的，为基于Web的应用程序提供了下上文，这个模块提供常见的Web任务的处理功能 ，简化了处理多部分请求及将请求参数绑定到域对象的工作，而且在Spring 的模块中，提供了对Struts的支持.
+	
+	7.MVC模块
+		Spring的MVC模块是一个完整的MVC实现，虽然Spring可以很好地和其他 MVC框架集成，但是Spring 中通过使用反转控制可以把业务逻辑和控制逻辑分离开，而且在Spring 中可以声明如何将请求参数绑定到业务对象中，同时在Spring的MVC中，支持各种视图技术，例如JSP,Velocity,Tiles等。
+	
+	上面这些模块就是Spring 中的主要功能模块，这些模块提供了开发企业级应用所需的基本功能，用户可以选择使用需要的模块，通过这些模块简化应用程序的开发.
+
+beans1.xml	
+===============================================================
+<?xml version = "1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="..." class="...">
+	<!-- collaborators and configuration for this bean go here -->
+	</bean>
+
+	<bean id="..." class="...">
+	<!-- collaborators and configuration for this bean go here -->
+	</bean>
+
+	<!-- more bean definitions go here -->
+
+</beans>
+
+===============================================================
+
+<bean id="" name="" class=""> 
+id 不能填写为特殊字符，当要用到特殊字符时就用name属性，如果没有特殊字符就用id属性
+id名推荐首字符小写
+
+Spring是如何创建和管理bean的呢?
+可以模拟一下
+	通过dom4j读取beans.xml
+
+
+===============================================================
+三种实例化bean方式
+1.使用类构造器实例化
+	<bean id = "orderService" class="com.yifabao.OrderServiceBean"/>
+2.使用静态工厂方法实例化
+	<bean id="personService2" class="com.yifabao.beanfactory.PersonServiceBeanFactory" factory-method="createPersonServiceBean"/>
+	public class OrderFactory{
+		public static OrderServiceBean createOrder(){
+			return new OrderServiceBean();	
+		}	
+	}
+
+3.使用实例工厂方法实例化:
+<bean id = "personServiceBeanFactory" class="com.yifabao.beanfactory.PersonServiceBeanFactory"/>
+<bean id = "personService3" factory-bean = "personServiceFactory" factory-method="createPersonServiceBean"/>
+public class PersonServiceBeanFactory{
+	public PersonService createPersonServiceBean(){
+		return new PersonService();	
+	}
+}
+
+Spring 管理的bean的作用域及生命周期
+===============================================================
+1.通过spring 容器获取的bean 的引用是否相同？
+	相同，说明是单实例
+
+2.如何获取不同的实例呢?需要指定作用域
+	在每个Spring IoC容器中一个bean 定义只有一个对象实例。默认情况下会在容器启动的时候初始化bean,
+但我们可以指定Bean节点的lazy-init="true"来延迟初始化bean，这时候，只有第一次获取bean时才会初始化bean：如
+下:
+<bean lazy-init="true"..>
+这个属除非是特殊情况，否则少用，因为如果用了，有错误能在运行期发现
+
+prototype
+每次从容器获取bean都是新的对象，原型
+<bean default-lazy-init="true".. scope="prototype">
+
+3.单实例时，在什么时候实例化
+	没有指定lazy-init=true 在实例化容器时就初始化了
+	指定lazy-init =true 在第一次获取bean时初始化
+
+Spring依赖注入原理
+===============================================================
+一般来说注入对象有:
+	1.通过构造函数
+	2.通过属性，要调用 set方法
+	3.使用Field注入（用于注解方式）
+所谓控制反转就是说：原先在某个服务程程序中依赖的bean对象，是自己创建控制的，通过spring容器的依赖注入
+就将依赖的bean对象的创建任务交给Spring容器了，控制权发生了转移，这就是控制反转.
+
+内部是如何实现注入功能的呢?
+可以在原先的模拟spring容器中再次模拟
+
+
+===============================================================
+通过内部bean的方式注入,不用ref
+用内部bean的方式，只为某个对象服务，其他的对象不能引用
+
+如何注入基本类型呢?
+模拟一下
+
+通过构造器注入基本属性
+
+
+===============================================================
+采用注解的方式注入
+采用注解的方式必须引入命名空间和命名空间下的 schema文件
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<context:annotation-config/>
+</beans>
+
+<context:annotation-config/> 这个配置隐式注册了几个处理器
+AutowiredAnnotationBeanPostProcessor
+CommonAnnotationBeanPostProcessor
+PersistenceAnnotationBeanPostProcessor
+RequiredAnnotationBeanPostProcessor
+
+
+
+在java代码中使用@AutoWired或 @Resource 注解方式进行装配,这两个注解的区别是
+	@AutoWired 默认按类型装配 
+	@Resource 先按名称进行查找，如果找不到再以类型查找
+
+	建议不要使用@Autowired,而使用@Resource,后者是jdk自带的
+	使用注解连set get方法都不需要使用
+
+	注解放属性上也可以放属性的set方法上
+
+
+
+
+手工装配的两种方式：xml配置文件，注解
+自动装配:需要有set方法
+
+========================================================================
+如果有成千上万个bean，那么用配置文件也非常臃肿,那么可以通过在classpath自动
+扫描方式把组件纳入容器
+那么如何知道类路径下的那些类需要交给spring管理呢?
+通过注解
+	@Service 标注的是业务层的
+	@Controller 标注的是控制层的 如struts 的action
+	@Repository 用于标注数据访问组件
+	@Componnet 泛指组件,当组件不好归类的时候，我们可以使用这个注解进行标注
+
+	目 前用这几个注解是一样的
+
+
+AOP代理对象
+========================================================================
+aop代理:静态代理 和 动态代理
+
+横切性关注点
+
+	前置通知:方法执行前
+	后置通知:方法执行成功后
+	例外通知:捕获到异常后
+	最终通知:finally里的
+
+AOP中的一些概念
+
+	Aspect(切面) 对横切性关注点的抽象
+
+	joinpoint(连接点) 被拦截到的点,在spring中，这些点指的是方法，因为spring只支持方法类型的连接点,实际上joinpoint还可以是field或类构造器
+
+	(Pointcut)切入点,对joinpoint进行拦截的定义
+
+	Advice(通知) ：所谓通知是指拦截到joinpoint之后所要做的事情就是通知，通知分为前置通知，后置通知，异常通知，最终通知，环绕通知
+
+	Target(目标对象 ) :代理的目标对象
+
+	Weave(织入) :指将aspects应用到target对象并导致proxy对象创建的过程称为织入
+
+	Introduction(引入) :在不修改类代码的前提下，Introduction可以在运行期为类动态地添加一些方法或Field
+
+
+基于配置的方示的拦截方法定义的表达式:
+expression = "execution(* com.yifabao.service.impl.PersonServiceBean.*(..))"
+//表示返值值任意，拦截PersonServiceBean类下的所有方法,方法参数任意
+
+expression = "execution (java.lang.String com.yifabao.impl.PersonService.*(..))"
+//跟上面的唯一区别是拦截的方法的返回值类型要回String
+
+expression = "execution (* com.yifabao.impl.PersonService.*(java.lang.String,..))"
+//输入参数第一个要为String
+
+要求拦截的返回值类型不是 void的
+expression = "execution (!void com.yifabao.impl.PersonService.*(java.lang.String,..))"
+
+对com.yifabao.service包下的及其子包的所有类的所有方法进行拦截
+expression = "expression (* com.yifabao.service..*.*(..))"
+
+
+
+========================================================================
+spring注解方式管理事务与传播行为详解
+
+
+
+
+1.默认情况下，运行期(runtime exception)异常 事务回滚,非运行期异常(checked exception)事务不回滚,
+	但自己在本机上默认情况下，无论是运行期异常还是检查异常，都回滚了
+自已可以指定其是否回滚
+
+2.默认事务传播为:required
+
+事务传播特性的解释:
+1.required :业务方法需要在一个事务中运行，如果方法运行时，已经处在一个事务中，那么加入到该事务，否则为自己创建一个新的事务.
+2.not_supported :声明方法不需要事务，如果方法没有关联到一个事务，容器不会为它开启事务。如果方法在一个事务中被调用，该事务会被挂起，在方法调用结束后，原先的事务便会恢复执行.
+3.requiresnew :属性表明不管是否存在事务，业务方法总会为自己发起一个新的事务。如果方法已经运行在一个事务中，则 原有的事务会挂起，新的事务被创建，直到方法执行结束，新事务才算结束，原先的事务才会恢复执行.
+4.mandatory:该属性指定业务方法只能在一个已经存在的事务中执行，业务方法不能发起自己的事务。如果业务方法在没有事务的不幸下调用，容器就会抛出例外。
+
+5.supports:这一事务属性表明，如果业务方法在某个事务范围内被调用，则 方法成为该事务的一部分。如果业务方法在事务范围外被调用，则 方法在没有事务的环境下执行。
+
+6.nested:如果一个活动的事务存在，则运行在一个嵌套的事务中。如果没有活动事务，则按requred 属性执行。它使用了一个单独的事务，这个事务拥有多个回滚的保存点。内部事务的回滚不会对外部事务造成影响。它只对DataSourceTransactionManager事务管理器起效.
+
+
+
+================================
+此外还可以设置只读事务 readonly
+设置超时时间:timeout
+设置事务隔离级别，依赖低层数据库：
+	数据库系统提供了四种事务隔离级别供用户选择。不同的隔离级别采用不同的锁类型来实现，在四种隔离级别中，Serializable的隔离级别最高，Read Uncommited的隔离级别最低。大多数据库默认的隔离级别为Read commited,如sqlserver,当然也有少部分数据库默认的隔离级别为repeatable read,如mysql;
+
+	Read Uncommited:读未提交数据(会出现脏读,不可重复读和幻读)
+	Read Commited:读已提交数据(会出现不可重复读和幻读)
+	Repeatable Read:可重复读(会出现幻读)
+	Serializable:串行化
+
+
+脏读:两个并发事务中,一个事务读取到另一事务未提交的更新数据.
+
+不可重复读：在同一个事务中，多次读取同一数据返回的结果有所不同。换句话说就是，后续读取可以读到另一事务已提交的更新数据。相反，“可重复读”在同一事务中多次读取数据时，能够保证所读数据一样，也就是，后续读取到另一事务已提交的更新数据。
+
+幻读：一个事务读取到另一事务已提交的insert数据
+
+
+危害最大的是:脏读
+
+
+=============================================================================
+Spring+hibernate+struts1.3整合开发:
+
+先整合spring+hibernate
+这是一个web项目
+
+注意自己用的hibernate 的版本
+如果用的是hibernate4,则 org.springframework.orm.hibernate4.LocalSessionFactoryBean
+在类目录下添加log4j.properties否则报警告
+
+===========================================================================
+spring容器可以通过listener来进行初始化
+
+把action交给spring管理后,我们可以使用依赖注入在action中注入业务层的bean,确保action的path属性值与bean的名称相同.
+
+
+org.springframework.web.struts.DelegatingRequestProcessor 处理过程：
+
+用户请求 /person/list.do ===> web.xml 下的ActionServlet ===>DelegatingRequestProcessor请求处理器
+===>Spring容器(Action交给了容器客理)<bean name="/person/list" class="com.yifabao.web.action.PersonAction"/>
+获取action对象，处理用户的请求
+
+
+<action path="/person/list" type="com.yifabao.web.action.PersonAction" validate = "false">
+		<forward name="list" path="WEB-INF/page/personlist.jsp"/>
+</action>
+
+当把Action交给spring管理后，type属性就不用配了，因为spring请求处理器，根据用户的请求路径会到spring容器去寻找跟/person/list 相同的bean ,如果找到就会用这个bean来处理用户的请求.
+
+type也可以配，当spring请求处理在spring容器中找不到action bean时才会让struts根据type创建一个action;
+
+
+spring软件开发包下载网址repo.spring.io 查询spring-framework
+
+maven中央仓库:
+search.maven.org
+http://mavenrepository.com
+
+org.springframework.web.struts.DelegatingRequestProcessor这个类需要下载
+spring-struts这个模块，在search.maven.org上能搜到
+
+index.jsp用<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+一直报错，发现web.xml中启动struts的servlet没有设置	<load-on-startup>0</load-on-startup>
+了一个<load-on-startup>0</load-on-startup>
+这样开始是没有加载这个类，就没有初始化struts-config.xml，所以找不到
+actionmappings or actionformbeans collection
+
+
+使用spring解决hibernate因session关闭导致延迟加载异常的问题
+<filter>
+	<filter-name>OpenSessionInViewFilter</filter-name>
+	<filter-class>org.springframework.orm.hibernate4.support.OpenSessionViewFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>OpenSessionInViewFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+session的打开是在请求到来时打开，请求
+从中由 Spring 来控制 Hibernate 的 Session 在请求来的时候开启，走的时候关闭，保证了我们访问数据对象时的稳定性。
