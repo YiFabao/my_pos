@@ -1,0 +1,2 @@
+git默认的编辑器是nano，使用起来感觉很别扭，通过下面命令可以将git默认的编辑器变为vim
+git config –global core.editor vim
